@@ -28,8 +28,13 @@ defined('MOODLE_INTERNAL') || die();
 $string['pluginname'] = 'Availability coursepayment';
 $string['title'] = 'Coursepayment';
 $string['description'] = 'Vereist deelnemers om een bepaald aantal minuten in een cursus te hebben geleerd';
-$string['minutes'] = 'minuten';
-$string['cost'] = 'cost';
+$string['cost'] = 'Prijs';
+$string['vat'] = 'BTW percentage inbegrepen in de kosten';
+$string['currency'] = 'Valuta';
+
 $string['error_invalidnumber'] = 'Voeg een geldig getal a.u.b.';
-$string['require_condition'] = 'U heeft ten minste <strong>{$a->minimal_minutes}</strong> gespendeerd in deze cursus.';
-$string['label_minimal_minutes'] = 'Minimaal aantal vereiste minuten in deze cursus';
+$string['require_condition'] = '<br/>Pas beschikbaar na betaling van {$a->cost} {$a->currency}<br/>
+{$a->btn}';
+$string['currency:eur'] = 'Euro';
+$string['currency:usd'] = 'Dollar';
+$string['btn:purchase'] = 'Koop';

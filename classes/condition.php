@@ -49,19 +49,19 @@ class condition extends \core_availability\condition {
 
         if (property_exists($structure, 'cost')) {
             $this->cost = abs($structure->cost);
-        }else{
+        } else {
             $this->cost = 0;
         }
 
         if (property_exists($structure, 'currency')) {
             $this->currency = $structure->currency;
-        }else{
+        } else {
             $this->currency = 'EUR';
         }
 
         if (property_exists($structure, 'vat')) {
             $this->vat = $structure->vat;
-        }else{
+        } else {
             $this->vat = 21;
         }
 
@@ -75,10 +75,11 @@ class condition extends \core_availability\condition {
      */
     public function save() {
         // Save back the data into a plain array similar to $structure above.
-        return (object)array('type' => 'coursepayment',
-                             'cost' => $this->cost,
-                             'currency' => $this->currency,
-                             'vat' => $this->vat,
+        return (object)array(
+            'type' => 'coursepayment',
+            'cost' => $this->cost,
+            'currency' => $this->currency,
+            'vat' => $this->vat,
         );
     }
 
@@ -131,6 +132,10 @@ class condition extends \core_availability\condition {
     public function is_available($not, \core_availability\info $info, $grabthelot, $userid) {
 
         // @TODO validate that a user has paid.
+        $ispaid = false; // @TODO a real check on the db
+        if(!$ispaid){
+            return false;
+        }
 
         return true;
     }
@@ -165,14 +170,30 @@ class condition extends \core_availability\condition {
         // the condition on editing screens. Usually it is similar to
         // the information shown if the user doesn't meet the
         // condition (it does not depend on the current user).
-        // global $USER;
         // $course = $info->get_course();
         $obj = new \stdClass();
-        $obj->cost = $this->cost;
-        $obj->currency = $this->currency;
+        $obj->cost = $this->price($this->cost);
+        $obj->currency = get_string('currency:' . strtolower($this->currency), 'availability_coursepayment');
         $obj->vat = $this->vat;
-
+        $obj->btn = \html_writer::link(new \moodle_url('/availability/condition/coursepayment/payment.php' , [
+            'cmid' => $info->get_context()->instanceid,
+            'courseid' => $info->get_course()->id,
+                ]) , get_string('btn:purchase' , 'availability_coursepayment') , [
+                    'class' => 'btn btn-primary'
+        ]);
+        
         return get_string('require_condition', 'availability_coursepayment', $obj);
+    }
+
+    /**
+     * get correct number format used for pricing
+     *
+     * @param float|int $number
+     *
+     * @return string
+     */
+    public function price($number = 0.00) {
+        return number_format(round($number, 2), 2, ',', ' ');
     }
 
     /**

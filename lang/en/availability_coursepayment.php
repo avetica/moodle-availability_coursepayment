@@ -27,10 +27,14 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Availability coursepayment';
 $string['title'] = 'Coursepayment';
-$string['description'] = 'Require students to have (or not have) x learningtime in this course.';
+$string['description'] = 'Require a user to pay for a activity first.';
 $string['cost'] = 'Cost';
 $string['vat'] = 'VAT Percentage included in the cost';
 $string['currency'] = 'Currency';
 $string['error_invalidnumber'] = 'Add valid number please';
-$string['require_condition'] = 'you spend at least <strong>{$a->minimal_minutes}</strong> in this course.';
-$string['label_minimal_minutes'] = 'Minimal required minutes spent in the course';
+$string['require_condition'] = '<br/>Only available if you pay {$a->cost} {$a->currency}<br/>
+{$a->btn}';
+
+$string['currency:eur'] = 'Euro';
+$string['currency:usd'] = 'Dollar';
+$string['btn:purchase'] = 'Purchase';
