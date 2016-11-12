@@ -54,7 +54,7 @@ class frontend extends \core_availability\frontend {
      * @return array Array of required string identifiers
      */
     protected function get_javascript_strings() {
-        return array('minutes', 'label_minimal_minutes');
+        return array('cost', 'vat' , 'currency');
     }
 
     /**

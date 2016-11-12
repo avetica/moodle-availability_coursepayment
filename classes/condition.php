@@ -31,27 +31,41 @@ defined('MOODLE_INTERNAL') || die();
 class condition extends \core_availability\condition {
 
     /**
-     * How many seconds between log counts in the calculation
-     *
-     * @const int SECONDS_BETWEEN
+     * @var int $cost
      */
-    const SECONDS_BETWEEN = 1800;
+    protected $cost = 0;
 
     /**
-     * Minimal minutes needed to have this condition
-     *
-     * @var int $minimal_minutes
+     * @var string
      */
-    protected $minimal_minutes = 0;
+    protected $currency = 'EUR';
+
+    /**
+     * @var int
+     */
+    protected $vat = 21;
 
     public function __construct($structure) {
 
-        if (isset($structure->minimal_minutes) && is_int($structure->minimal_minutes)) {
-            // set a number
-            $this->minimal_minutes = abs($structure->minimal_minutes);
-        }else {
-            throw new \coding_exception('Missing or invalid ->minimal_minutes for learningtime condition');
+        if (property_exists($structure, 'cost')) {
+            $this->cost = abs($structure->cost);
+        }else{
+            $this->cost = 0;
         }
+
+        if (property_exists($structure, 'currency')) {
+            $this->currency = $structure->currency;
+        }else{
+            $this->currency = 'EUR';
+        }
+
+        if (property_exists($structure, 'vat')) {
+            $this->vat = $structure->vat;
+        }else{
+            $this->vat = 21;
+        }
+
+        // Throw errors??
     }
 
     /**
@@ -61,7 +75,11 @@ class condition extends \core_availability\condition {
      */
     public function save() {
         // Save back the data into a plain array similar to $structure above.
-        return (object)array('type' => 'learningtime', 'minimal_minutes' => $this->minimal_minutes);
+        return (object)array('type' => 'coursepayment',
+                             'cost' => $this->cost,
+                             'currency' => $this->currency,
+                             'vat' => $this->vat,
+        );
     }
 
     /**
@@ -70,11 +88,19 @@ class condition extends \core_availability\condition {
      * Intended for unit testing, as normally the JSON values are constructed
      * by JavaScript code.
      *
-     * @param string $minimal_minutes
+     * @param int|string $cost
+     * @param int $vat
+     * @param string $currency
+     *
      * @return stdClass Object representing condition
      */
-    public static function get_json($minimal_minutes) {
-        return (object)array('type' => 'learningtime', 'minimal_minutes' => (int)$minimal_minutes);
+    public static function get_json($cost = 0, $vat = 21, $currency = 'EUR') {
+        return (object)array(
+            'type' => 'coursepayment',
+            'cost' => (int)$cost,
+            'vat' => (int)$vat,
+            'currency' => $currency,
+        );
     }
 
 
@@ -104,13 +130,7 @@ class condition extends \core_availability\condition {
      */
     public function is_available($not, \core_availability\info $info, $grabthelot, $userid) {
 
-        $course = $info->get_course();
-        if ($this->minimal_minutes > 0) {
-            $spentseconds = $this->get_user_time($userid, $course->id);
-            if ($spentseconds < ($this->minimal_minutes * 60)) {
-                return false;
-            }
-        }
+        // @TODO validate that a user has paid.
 
         return true;
     }
@@ -148,125 +168,11 @@ class condition extends \core_availability\condition {
         // global $USER;
         // $course = $info->get_course();
         $obj = new \stdClass();
-        $obj->minimal_minutes = $this->time_format($this->minimal_minutes);
-
-        if ($this->minimal_minutes > 0) {
-            // we need to check if the user has this condition
-            // $obj->minutes = $this->get_user_time($USER->id , $course->id);
-        }
+        $obj->cost = $this->cost;
+        $obj->currency = $this->currency;
+        $obj->vat = $this->vat;
 
         return get_string('require_condition', 'availability_coursepayment', $obj);
-    }
-
-    /**
-     * get_user_time
-     *
-     * @param int $userid
-     * @param int $courseid
-     *
-     * @return int return the minutes a user spent on this
-     */
-    protected function get_user_time($userid = 0, $courseid = 0) {
-        global $DB;
-        //@todo maybe some sort of caching or writing stats to DB
-        static $userHolder = array();
-
-        if(isset($userHolder[$userid][$courseid])){
-            return $userHolder[$userid][$courseid];
-        }
-
-        $set = array();
-        $sql = 'SELECT id, timecreated as time FROM {logstore_standard_log} WHERE userid = ? AND courseid = ? ORDER BY id DESC';
-
-        $results = $DB->get_records_sql($sql, array($userid, $courseid));
-        foreach ($results as $result) {
-            $set[$result->time] = $result;
-        }
-
-        $sql = 'SELECT t.id, t.timemodified as time FROM {scorm_scoes_track} t
-            JOIN {scorm} s ON s.id = t.scormid
-            WHERE t.userid = ?
-            AND  s.course = ?
-            ORDER BY t.id DESC';
-
-        $results = $DB->get_records_sql($sql, array($userid, $courseid));
-        foreach ($results as $result) {
-            $set[$result->time] = $result;
-        }
-        krsort($set, SORT_NUMERIC);
-
-        // calculate time
-        $last = false;
-        $totalTime = 0;
-
-        foreach ($set as $log) {
-            if (!empty($last)) {
-                $sum = ($last->time - $log->time);
-                if ($sum <= self::SECONDS_BETWEEN) {
-                    $totalTime += $sum;
-                }
-                // else there is to much between a previous item
-            }
-
-            $last = $log;
-        }
-        unset($set , $results);
-
-        $userHolder[$userid][$courseid] = $totalTime;
-        return $totalTime;
-    }
-
-    /**
-     * convert minutes to better readable format
-     *
-     * @param int $minutes
-     *
-     * @return string
-     */
-    protected function time_format($minutes = 0) {
-        return $this->time_elapsed_string($minutes * 60);
-    }
-
-
-    /**
-     * time_elapsed_string
-     *
-     * @param int $seconds
-     *
-     * @return string
-     */
-    protected function time_elapsed_string($seconds) {
-        $etime = $seconds;
-        if ($etime < 1) {
-            return '0 seconds';
-        }
-
-        $a = array(
-            12 * 30 * 24 * 60 * 60 => 'year',
-            30 * 24 * 60 * 60 => 'month',
-            24 * 60 * 60 => 'day',
-            60 * 60 => 'hour',
-            60 => 'minute',
-            1 => 'second'
-        );
-
-        if (!empty($mode)) {
-            foreach ($a as $k => $v) {
-                if ($v == $mode) {
-                    $a = array($k => $v);
-                    break;
-                }
-            }
-        }
-
-        foreach ($a as $secs => $str) {
-            $d = $etime / $secs;
-            if ($d >= 1) {
-                $r = round($d);
-
-                return $r . ' ' . get_string($str . ($r > 1 ? 's' : ''));
-            }
-        }
     }
 
     /**
@@ -279,6 +185,6 @@ class condition extends \core_availability\condition {
         // This function is only normally used for unit testing and
         // stuff like that. Just make a short string representation
         // of the values of the condition, suitable for developers.
-        return ($this->minimal_minutes > 0) ? 'Minimal_minutes ON' : 'Minimal_minutes OFF';
+        return ($this->cost > 0) ? 'cost ON' : 'cost OFF';
     }
 }
