@@ -130,14 +130,7 @@ class condition extends \core_availability\condition {
      * @return bool True if available
      */
     public function is_available($not, \core_availability\info $info, $grabthelot, $userid) {
-
-        // @TODO validate that a user has paid.
-        $ispaid = false; // @TODO a real check on the db
-        if(!$ispaid){
-            return false;
-        }
-
-        return true;
+        return helper::user_can_access_cmid($info->get_context()->instanceid);
     }
 
     /**
@@ -172,7 +165,7 @@ class condition extends \core_availability\condition {
         // condition (it does not depend on the current user).
         // $course = $info->get_course();
         $obj = new \stdClass();
-        $obj->cost = $this->price($this->cost);
+        $obj->cost = helper::price($this->cost);
         $obj->currency = get_string('currency:' . strtolower($this->currency), 'availability_coursepayment');
         $obj->vat = $this->vat;
         $obj->btn = \html_writer::link(new \moodle_url('/availability/condition/coursepayment/payment.php' , [
@@ -185,16 +178,6 @@ class condition extends \core_availability\condition {
         return get_string('require_condition', 'availability_coursepayment', $obj);
     }
 
-    /**
-     * get correct number format used for pricing
-     *
-     * @param float|int $number
-     *
-     * @return string
-     */
-    public function price($number = 0.00) {
-        return number_format(round($number, 2), 2, ',', ' ');
-    }
 
     /**
      * Obtains a representation of the options of this condition as a string,

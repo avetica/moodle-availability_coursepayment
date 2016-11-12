@@ -1,18 +1,33 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * File: payment.php
- * Encoding: UTF8
+ * Payment page for a activity
  *
- * @package: availability_coursepayment
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @Version: 1.0.0
- * @Since  12-11-2016
- * @Author : MoodleFreak.com | Ldesign.nl - Luuk Verhoeven
+ * @package availability_coursepayment
+ * @copyright 2016 MoodleFreak.com
+ * @author    Luuk Verhoeven
  **/
 require('../../../config.php');
 $cmid = required_param('cmid', PARAM_INT);
 $courseid = required_param('courseid', PARAM_INT);
-$gatewaymethod = optional_param('gateway', false, PARAM_ALPHA);
+$method = optional_param('method', false, PARAM_ALPHA);
+
 
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 
@@ -35,28 +50,47 @@ $PAGE->requires->js_init_call('M.enrol_coursepayment_gateway.init', array(
     $course->id
 ), false, $jsmodule);
 
-
-echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('pluginname', 'enrol_coursepayment'));
-
-// @TODO get pricing from the condition.
-echo '<div align="center">
-                            <h3 class="coursepayment_instancename">' . $name . '</h3>
-                            <p><b>' . get_string("cost") . ': 
-                            <span id="coursepayment_cost">' . $config->localisedcost . '</span> ' .
-    $instance->currency . ' </b></p>
-                          </div>';
-
-$gateway = 'enrol_coursepayment_mollie';
-if (!class_exists($gateway)) {
-    throw Exception('Error');
+if(\availability_coursepayment\helper::user_can_access_cmid($cmid)){
+    redirect(new moodle_url('/course/view.php' , ['id' => $course->id]));
 }
 
-/* @var enrol_coursepayment_gateway $gateway */
-$gateway = new $gateway();
-$gateway->set_instanceconfig($config);
+// Get more info.
+$module = \availability_coursepayment\helper::get_cmid_info($cmid , $course->id);
+$pricing = \availability_coursepayment\helper::pricing_from_cmid($cmid);
 
-// @TODO add new path to javascript.
+// Check if we are redirecting.
+if(!$method){
+    echo $OUTPUT->header();
+    echo $OUTPUT->heading(get_string('pluginname', 'enrol_coursepayment'));
+    echo '<div align="center">
+        <h3 class="coursepayment_instancename">' . $module->name . '</h3>
+        <p><b>' . get_string("cost") . ': 
+        <span id="coursepayment_cost">' . \availability_coursepayment\helper::price($pricing->cost)  . '</span> ' .
+get_string('currency:' . strtolower($pricing->currency), 'availability_coursepayment') . ' </b></p>
+      </div>';
+}
+
+
+/* @var enrol_coursepayment_gateway $gateway */
+$gateway = new enrol_coursepayment_mollie();
+$gateway->set_instanceconfig([
+    'is_activity' => true,
+    'userid' => $USER->id,
+    'userfullname' => fullname($USER),
+    'coursename' => $module->name,
+    'locale' => $USER->lang,
+    'currency' => $pricing->currency,
+    'cost' => $pricing->cost,
+    'cost' => $pricing->cost,
+    'courseid' => $course->id,
+    'vatpercentage' => $pricing->vat,
+    'instanceid' => 0,
+    'cmid' => $cmid,
+    'customint1' => 0,
+]);
+
+// Payment form.
 echo $gateway->order_form();
 
+// Moodle Footer.
 echo $OUTPUT->footer();
