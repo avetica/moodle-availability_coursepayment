@@ -1,5 +1,6 @@
 Availability coursepayment
 ====================
+Activity based restriction. Users have to pay first before they can enter a activity. 
 
 Author
 ====================
@@ -11,14 +12,14 @@ Author
 
 Description
 ====================
-@todo 
+Activity based restriction. Users have to pay first before they can enter a activity. 
 
 **Note: This plugin requires `enrol_coursepayment` to be installed.**
 
-
 List of features
 ====================
-@todo
+- Shows a payment button in availability condition.
+- Configurable cost , currency and vat included.
 
 Installation
 ====================

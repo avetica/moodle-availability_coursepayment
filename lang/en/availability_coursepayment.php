@@ -25,7 +25,7 @@
  **/
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'Availability coursepayment';
+$string['pluginname'] = 'Restriction by coursepayment';
 $string['title'] = 'Coursepayment';
 $string['description'] = 'Require a user to pay for a activity first.';
 $string['cost'] = 'Cost';
