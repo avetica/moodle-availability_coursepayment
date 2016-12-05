@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Beperking door coursepayment';
 $string['title'] = 'Coursepayment';
-$string['description'] = 'Vereist deelnemers om een bepaald aantal minuten in een cursus te hebben geleerd';
+$string['description'] = 'Vereist deelnemers om te betalen voor een activiteit.';
 $string['cost'] = 'Prijs';
 $string['vat'] = 'BTW percentage inbegrepen in de kosten';
 $string['currency'] = 'Valuta';
