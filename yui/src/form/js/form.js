@@ -71,7 +71,7 @@ M.availability_coursepayment.form.getNode = function (json) {
             // the JSON data in the hidden field in the form, so that it
             // includes the new value of the checkbox.
             M.core_availability.form.update();
-        }, '.availability_coursepayment input');
+        }, '.availability_coursepayment input, .availability_coursepayment select');
     }
 
     return node;
@@ -102,13 +102,19 @@ M.availability_coursepayment.form.getValue = function (field, node) {
     var node = node.one('[name=' + field + ']');
     if (node) {
         value = node.get('value');
+        // Make , = .
+        value = value.replace(/,/g, '.');
     }
 
     // If it is not a valid positive number, return false.
-    var reg = new RegExp('^\\d+$');
+    var reg = new RegExp('^\\d.+$');
     if (reg.test(value)) {
-        console.log('Return:' + parseInt(value));
-        return parseInt(value);
+        if(field === 'vat'){
+            console.log('vat:' + value);
+            return parseInt(value);
+        }
+
+        return parseFloat(value).toFixed(2);
     }
 
     console.log('String:' + value);
@@ -117,13 +123,23 @@ M.availability_coursepayment.form.getValue = function (field, node) {
 
 M.availability_coursepayment.form.fillErrors = function (errors, node) {
     var value = {};
+    var reg = new RegExp('^[\\d.]+$');
+
     this.fillValue(value, node);
-    console.log(value)
+
     // Check numeric values.
-    if ((value.cost !== undefined && typeof(value.cost) === 'string')) {
-        errors.push('availability_coursepayment:error_invalidnumber');
+    if ((value.cost !== undefined)) {
+
+        if (!reg.test(value.cost)) {
+            console.log('cost - availability_coursepayment:error_invalidnumber');
+            errors.push('availability_coursepayment:error_invalidnumber');
+        }
     }
-    if ((value.vat !== undefined && typeof(value.vat) === 'string')) {
-        errors.push('availability_coursepayment:error_invalidnumber');
+    // Check vat.
+    if ((value.vat !== undefined)) {
+        if (!reg.test(value.vat)) {
+            console.log('vat - availability_coursepayment:error_invalidnumber ' + value.vat);
+            errors.push('availability_coursepayment:error_invalidnumber');
+        }
     }
 };

@@ -31,7 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 class condition extends \core_availability\condition {
 
     /**
-     * @var int $cost
+     * @var float $cost
      */
     protected $cost = 0;
 
@@ -98,7 +98,7 @@ class condition extends \core_availability\condition {
     public static function get_json($cost = 0, $vat = 21, $currency = 'EUR') {
         return (object)array(
             'type' => 'coursepayment',
-            'cost' => (int)$cost,
+            'cost' => (float)$cost,
             'vat' => (int)$vat,
             'currency' => $currency,
         );
