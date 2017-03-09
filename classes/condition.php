@@ -159,6 +159,24 @@ class condition extends \core_availability\condition {
      */
     public function get_description($full, $not, \core_availability\info $info) {
 
+        $params = [
+            'courseid' =>
+                $info->get_course()->id,
+        ];
+        if ($info->get_context()->contextlevel == CONTEXT_MODULE) {
+            // Module params.
+            $params += [
+                'cmid' => $info->get_context()->instanceid,
+                'contextlevel' => CONTEXT_MODULE
+            ];
+        } else {
+            // Section params.
+            $params += [
+                'contextlevel' => CONTEXT_COURSE,
+                'section' => $info->get_section()->section
+            ];
+        }
+
         // This function just returns the information that shows about
         // the condition on editing screens. Usually it is similar to
         // the information shown if the user doesn't meet the
@@ -168,13 +186,10 @@ class condition extends \core_availability\condition {
         $obj->cost = helper::price($this->cost);
         $obj->currency = get_string('currency:' . strtolower($this->currency), 'availability_coursepayment');
         $obj->vat = $this->vat;
-        $obj->btn = \html_writer::link(new \moodle_url('/availability/condition/coursepayment/payment.php' , [
-            'cmid' => $info->get_context()->instanceid,
-            'courseid' => $info->get_course()->id,
-                ]) , get_string('btn:purchase' , 'availability_coursepayment') , [
-                    'class' => 'btn btn-primary'
+        $obj->btn = \html_writer::link(new \moodle_url('/availability/condition/coursepayment/payment.php', $params), get_string('btn:purchase', 'availability_coursepayment'), [
+            'class' => 'btn btn-primary'
         ]);
-        
+
         return get_string('require_condition', 'availability_coursepayment', $obj);
     }
 

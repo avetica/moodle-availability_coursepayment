@@ -19,22 +19,25 @@
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @package availability_coursepayment
+ * @package   availability_coursepayment
  * @copyright 2016 MoodleFreak.com
  * @author    Luuk Verhoeven
  **/
 require('../../../config.php');
-$cmid = required_param('cmid', PARAM_INT);
+$cmid = optional_param('cmid', false, PARAM_INT);
+$section = optional_param('section', false, PARAM_INT);
+$contextlevel = required_param('contextlevel', PARAM_INT);
 $courseid = required_param('courseid', PARAM_INT);
 $method = optional_param('method', false, PARAM_ALPHA);
-
 
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 
 require_login($course);
 $PAGE->set_url('/availability/condition/coursepayment/payment.php', array(
     'courseid' => $course->id,
-    'id' => $cmid
+    'cmid' => $cmid,
+    'method' => $method,
+    'section' => $section,
 ));
 
 // Set main gateway javascript
@@ -50,26 +53,56 @@ $PAGE->requires->js_init_call('M.enrol_coursepayment_gateway.init', array(
     $course->id
 ), false, $jsmodule);
 
-if(\availability_coursepayment\helper::user_can_access_cmid($cmid)){
-    redirect(new moodle_url('/course/view.php' , ['id' => $course->id]));
+switch ($contextlevel) {
+
+    case CONTEXT_MODULE:
+
+        // Check if user already can access the content.
+        if (\availability_coursepayment\helper::user_can_access_cmid($cmid)) {
+            redirect(new moodle_url('/course/view.php', ['id' => $course->id]));
+        }
+
+        // Get more info.
+        $module = \availability_coursepayment\helper::get_cmid_info($cmid, $course->id);
+        $pricing = \availability_coursepayment\helper::pricing_from_cmid($cmid);
+
+        // Check if we are redirecting.
+        if (!$method) {
+            echo $OUTPUT->header();
+            echo $OUTPUT->heading(get_string('pluginname', 'enrol_coursepayment'));
+            echo '<div align="center">
+                    <h3 class="coursepayment_instancename">' . $module->name . '</h3>
+                    <p><b>' . get_string("cost") . ': 
+                    <span id="coursepayment_cost">' . \availability_coursepayment\helper::price($pricing->cost) . '</span> ' .
+                            get_string('currency:' . strtolower($pricing->currency), 'availability_coursepayment') . ' </b></p>
+                  </div>';
+        }
+
+        break;
+
+    case CONTEXT_COURSE:
+        // Check if user already can access the content.
+        if (\availability_coursepayment\helper::user_can_access_section($section , $course->id)) {
+            redirect(new moodle_url('/course/view.php', ['id' => $course->id]));
+        }
+
+        // Get more info.
+        $module = \availability_coursepayment\helper::get_section_info($section, $course->id);
+        $pricing = \availability_coursepayment\helper::pricing_from_section($section, $course->id);
+
+        // Check if we are redirecting.
+        if (!$method) {
+            echo $OUTPUT->header();
+            echo $OUTPUT->heading(get_string('pluginname', 'enrol_coursepayment'));
+            echo '<div align="center">
+                    <h3 class="coursepayment_instancename">' . $module->name . '</h3>
+                    <p><b>' . get_string("cost") . ': 
+                    <span id="coursepayment_cost">' . \availability_coursepayment\helper::price($pricing->cost) . '</span> ' .
+                get_string('currency:' . strtolower($pricing->currency), 'availability_coursepayment') . ' </b></p>
+                  </div>';
+        }
+        break;
 }
-
-// Get more info.
-$module = \availability_coursepayment\helper::get_cmid_info($cmid , $course->id);
-$pricing = \availability_coursepayment\helper::pricing_from_cmid($cmid);
-
-// Check if we are redirecting.
-if(!$method){
-    echo $OUTPUT->header();
-    echo $OUTPUT->heading(get_string('pluginname', 'enrol_coursepayment'));
-    echo '<div align="center">
-        <h3 class="coursepayment_instancename">' . $module->name . '</h3>
-        <p><b>' . get_string("cost") . ': 
-        <span id="coursepayment_cost">' . \availability_coursepayment\helper::price($pricing->cost)  . '</span> ' .
-get_string('currency:' . strtolower($pricing->currency), 'availability_coursepayment') . ' </b></p>
-      </div>';
-}
-
 
 /* @var enrol_coursepayment_gateway $gateway */
 $gateway = new enrol_coursepayment_mollie();
@@ -77,7 +110,7 @@ $gateway->set_instanceconfig([
     'is_activity' => true,
     'userid' => $USER->id,
     'userfullname' => fullname($USER),
-    'coursename' => $module->name,
+    'coursename' => $module->name, // $Module can also be a section
     'locale' => $USER->lang,
     'currency' => $pricing->currency,
     'cost' => $pricing->cost,
@@ -86,6 +119,8 @@ $gateway->set_instanceconfig([
     'vatpercentage' => $pricing->vat,
     'instanceid' => 0,
     'cmid' => $cmid,
+    'section' => $section,
+    'contextlevel' => $contextlevel,
     'customint1' => 0,
 ]);
 

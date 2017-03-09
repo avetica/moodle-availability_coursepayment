@@ -94,6 +94,26 @@ class helper {
     }
 
     /**
+     * get_cmid_info
+     *
+     * @param int $sectionnumber
+     * @param int $courseid
+     *
+     * @return bool|\cm_info
+     */
+    public static function get_section_info($sectionnumber = 0, $courseid = 0) {
+
+        $modinfo = get_fast_modinfo($courseid);
+        foreach ($modinfo->sections as $sectionnum => $section) {
+            if($sectionnum == $sectionnumber){
+                return $section;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Check if a user can access a coursemodule
      *
      * @param int $cmid
@@ -109,6 +129,24 @@ class helper {
         ], 'id', IGNORE_MULTIPLE);
 
         return ($row) ? true : false;
+    }
+
+    /**
+     * Get the price from the section availability_coursepayment
+     *
+     * @param int $sectionnumber
+     * @param int $courseid
+     */
+    public static function pricing_from_section($sectionnumber = 0 , $courseid = 0) {
+    }
+
+    /**
+     * Check if the user can access this section
+     *
+     * @param $sectionnumber
+     * @param int $courseid
+     */
+    public static function user_can_access_section($sectionnumber, $courseid = 0) {
     }
 
 }
