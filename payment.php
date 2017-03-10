@@ -90,6 +90,7 @@ switch ($contextlevel) {
         $module = \availability_coursepayment\helper::get_section_info($section, $course->id);
         $pricing = \availability_coursepayment\helper::pricing_from_section($section, $course->id);
 
+
         // Check if we are redirecting.
         if (!$method) {
             echo $OUTPUT->header();

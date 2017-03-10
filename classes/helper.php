@@ -23,6 +23,7 @@
  * @copyright 2016 MoodleFreak.com
  * @author    Luuk Verhoeven
  **/
+
 namespace availability_coursepayment;
 
 defined('MOODLE_INTERNAL') || die();
@@ -102,15 +103,20 @@ class helper {
      * @return bool|\cm_info
      */
     public static function get_section_info($sectionnumber = 0, $courseid = 0) {
+        global $DB;
 
-        $modinfo = get_fast_modinfo($courseid);
-        foreach ($modinfo->sections as $sectionnum => $section) {
-            if($sectionnum == $sectionnumber){
-                return $section;
-            }
-        }
+        $section = $DB->get_record('course_sections', [
+            'course' => $courseid,
+            'section' => $sectionnumber
+        ], '*', MUST_EXIST);
 
-        return false;
+        $courseformat = course_get_format($courseid);
+        $defaultsectionname = $courseformat->get_default_section_name($section);
+
+        $module = new \stdClass();
+        $module->name = $defaultsectionname;
+
+        return $module;
     }
 
     /**
@@ -136,8 +142,33 @@ class helper {
      *
      * @param int $sectionnumber
      * @param int $courseid
+     *
+     * @return \stdClass
      */
-    public static function pricing_from_section($sectionnumber = 0 , $courseid = 0) {
+    public static function pricing_from_section($sectionnumber = 0, $courseid = 0) {
+
+        global $DB;
+
+        $obj = new \stdClass();
+        $obj->price = 0;
+        $obj->vat = 0;
+        $obj->currency = 'EUR';
+
+        $coursemodule = $DB->get_record('course_sections', [
+            'course' => $courseid,
+            'section' => $sectionnumber
+        ], '*', MUST_EXIST);
+
+        $options = json_decode($coursemodule->availability);
+
+        // Set availability.
+        foreach ($options->c as $option) {
+            if ($option->type == 'coursepayment') {
+                $obj = $option;
+                break;
+            }
+        }
+        return $obj;
     }
 
     /**
@@ -145,8 +176,19 @@ class helper {
      *
      * @param $sectionnumber
      * @param int $courseid
+     *
+     * @return bool
      */
     public static function user_can_access_section($sectionnumber, $courseid = 0) {
+        global $USER, $DB;
+        $row = $DB->get_record('enrol_coursepayment', [
+            'userid' => $USER->id,
+            'section' => $sectionnumber,
+            'courseid' => $courseid,
+            'status' => 1
+        ], 'id', IGNORE_MULTIPLE);
+
+        return ($row) ? true : false;
     }
 
 }
