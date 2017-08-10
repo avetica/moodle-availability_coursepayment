@@ -118,11 +118,11 @@ $gateway->set_instanceconfig([
     'cost' => $pricing->cost,
     'courseid' => $course->id,
     'vatpercentage' => $pricing->vat,
+    'customint1' => $pricing->vat,
     'instanceid' => 0,
     'cmid' => $cmid,
     'section' => $section,
     'contextlevel' => $contextlevel,
-    'customint1' => 0,
 ]);
 
 // Payment form.
