@@ -33,3 +33,5 @@ Changelog
 ====================
 
 See version control for the complete history. Major changes in this version will be listed below.
+
+- 2017083100 Add support for payment standalone page 

@@ -40,18 +40,37 @@ $PAGE->set_url('/availability/condition/coursepayment/payment.php', array(
     'section' => $section,
 ));
 
-// Set main gateway javascript
-$jsmodule = array(
-    'name' => 'enrol_coursepayment_gateway',
-    'fullpath' => '/enrol/coursepayment/js/gateway.js',
-    'requires' => array('node', 'io')
-);
+/* @var enrol_coursepayment_gateway $gateway */
+$gateway = new enrol_coursepayment_mollie();
 
-$PAGE->requires->js_init_call('M.enrol_coursepayment_gateway.init', array(
-    $CFG->wwwroot . '/enrol/coursepayment/ajax.php',
-    sesskey(),
-    $course->id
-), false, $jsmodule);
+// Check if we support the standalone page mode.
+if($gateway->is_standalone_purchase_page()){
+    // Standalone.
+    $PAGE->requires->js_init_call('M.enrol_coursepayment_mollie_standalone.init', array(
+        $CFG->wwwroot . '/enrol/coursepayment/ajax.php',
+        sesskey(),
+        $course->id
+    ), false, array(
+        'name' => 'enrol_coursepayment_mollie_standalone',
+        'fullpath' => '/enrol/coursepayment/js/mollie_standalone.js',
+        'requires' => array('node', 'io')
+    ));
+    $PAGE->requires->css('/enrol/coursepayment/gateway_mollie.css');
+    $PAGE->set_pagelayout('popup');
+}else{
+    // Old payment page.
+    $jsmodule = array(
+        'name' => 'enrol_coursepayment_gateway',
+        'fullpath' => '/enrol/coursepayment/js/gateway.js',
+        'requires' => array('node', 'io')
+    );
+
+    $PAGE->requires->js_init_call('M.enrol_coursepayment_gateway.init', array(
+        $CFG->wwwroot . '/enrol/coursepayment/ajax.php',
+        sesskey(),
+        $course->id
+    ), false, $jsmodule);
+}
 
 switch ($contextlevel) {
 
@@ -68,14 +87,18 @@ switch ($contextlevel) {
 
         // Check if we are redirecting.
         if (!$method) {
-            echo $OUTPUT->header();
-            echo $OUTPUT->heading(get_string('pluginname', 'enrol_coursepayment'));
-            echo '<div align="center">
+            if($gateway->is_standalone_purchase_page()){
+                echo $OUTPUT->header();
+            }else{
+                echo $OUTPUT->header();
+                echo $OUTPUT->heading(get_string('pluginname', 'enrol_coursepayment'));
+                echo '<div align="center">
                     <h3 class="coursepayment_instancename">' . $module->name . '</h3>
                     <p><b>' . get_string("cost") . ': 
                     <span id="coursepayment_cost">' . \availability_coursepayment\helper::price($pricing->cost) . '</span> ' .
-                            get_string('currency:' . strtolower($pricing->currency), 'availability_coursepayment') . ' </b></p>
+                    get_string('currency:' . strtolower($pricing->currency), 'availability_coursepayment') . ' </b></p>
                   </div>';
+            }
         }
 
         break;
@@ -90,31 +113,33 @@ switch ($contextlevel) {
         $module = \availability_coursepayment\helper::get_section_info($section, $course->id);
         $pricing = \availability_coursepayment\helper::pricing_from_section($section, $course->id);
 
-
         // Check if we are redirecting.
         if (!$method) {
-            echo $OUTPUT->header();
-            echo $OUTPUT->heading(get_string('pluginname', 'enrol_coursepayment'));
-            echo '<div align="center">
+            if($gateway->is_standalone_purchase_page()){
+                echo $OUTPUT->header();
+            }else {
+                echo $OUTPUT->header();
+                echo $OUTPUT->heading(get_string('pluginname', 'enrol_coursepayment'));
+                echo '<div align="center">
                     <h3 class="coursepayment_instancename">' . $module->name . '</h3>
                     <p><b>' . get_string("cost") . ': 
                     <span id="coursepayment_cost">' . \availability_coursepayment\helper::price($pricing->cost) . '</span> ' .
-                get_string('currency:' . strtolower($pricing->currency), 'availability_coursepayment') . ' </b></p>
+                    get_string('currency:' . strtolower($pricing->currency), 'availability_coursepayment') . ' </b></p>
                   </div>';
+            }
         }
         break;
 }
 
-/* @var enrol_coursepayment_gateway $gateway */
-$gateway = new enrol_coursepayment_mollie();
 $gateway->set_instanceconfig([
     'is_activity' => true,
+    'instancename' => $module->name,
+    'localisedcost' => format_float($pricing->cost, 2, true),
     'userid' => $USER->id,
     'userfullname' => fullname($USER),
     'coursename' => $module->name, // $Module can also be a section
     'locale' => $USER->lang,
     'currency' => $pricing->currency,
-    'cost' => $pricing->cost,
     'cost' => $pricing->cost,
     'courseid' => $course->id,
     'vatpercentage' => $pricing->vat,
@@ -126,7 +151,7 @@ $gateway->set_instanceconfig([
 ]);
 
 // Payment form.
-echo $gateway->order_form();
+echo $gateway->order_form($gateway->is_standalone_purchase_page());
 
 // Moodle Footer.
 echo $OUTPUT->footer();
