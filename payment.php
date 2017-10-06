@@ -78,7 +78,7 @@ switch ($contextlevel) {
 
         // Check if user already can access the content.
         if (\availability_coursepayment\helper::user_can_access_cmid($cmid)) {
-            redirect(new moodle_url('/course/view.php', ['id' => $course->id]));
+            redirect(new moodle_url('/course/view.php', ['id' => $course->id , 'status' => 'user_can_access_cmid']));
         }
 
         // Get more info.
@@ -106,7 +106,7 @@ switch ($contextlevel) {
     case CONTEXT_COURSE:
         // Check if user already can access the content.
         if (\availability_coursepayment\helper::user_can_access_section($section , $course->id)) {
-            redirect(new moodle_url('/course/view.php', ['id' => $course->id]));
+            redirect(new moodle_url('/course/view.php', ['id' => $course->id, 'status' => 'user_can_access_section']));
         }
 
         // Get more info.
