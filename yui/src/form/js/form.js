@@ -33,7 +33,6 @@ M.availability_coursepayment.form.getNode = function (json) {
         '<label for="currency">' + strings.currency + ' </label>' +
         '<select name="currency">' +
         '<option value="EUR" selected="selected">Euro</option>' +
-        '<option value="USD">US Dollar</option>' +
         '</select><br/>' +
         '<label for="vat">' + strings.vat + ' </label><br/>' +
         '<select name="vat">';
@@ -109,7 +108,7 @@ M.availability_coursepayment.form.getValue = function (field, node) {
     // If it is not a valid positive number, return false.
     var reg = new RegExp('^\\d.+$');
     if (reg.test(value)) {
-        if(field === 'vat'){
+        if (field === 'vat') {
             console.log('vat:' + value);
             return parseInt(value);
         }
