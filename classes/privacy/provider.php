@@ -15,22 +15,28 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version info.
+ * Privacy Subsystem for availability_coursepayment implementing null_provider.
  *
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @package   : availability_coursepayment
- * @copyright 2016 MoodleFreak.com
+ * @package   availability_coursepayment
+ * @copyright 2018 MoodleFreak.com
  * @author    Luuk Verhoeven
  **/
+
+namespace availability_coursepayment\provider;
+
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2018081600;
-$plugin->requires = 2014050800;
-$plugin->component = 'availability_coursepayment';
-$plugin->maturity = MATURITY_STABLE;
-$plugin->release = 2015030101;
+class provider implements \core_privacy\local\metadata\null_provider {
 
-$plugin->dependencies = array(
-    'enrol_coursepayment' => 2017082900,
-);
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return  string
+     */
+    public static function get_reason() : string {
+        return 'privacy:metadata';
+    }
+}

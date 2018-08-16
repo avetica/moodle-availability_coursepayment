@@ -38,3 +38,5 @@ $string['require_condition'] = '<br/>Only available if you pay {$a->cost} {$a->c
 $string['currency:eur'] = 'Euro';
 $string['currency:usd'] = 'Dollar';
 $string['btn:purchase'] = 'Purchase';
+
+$string['privacy:metadata'] = 'The Restriction by coursepayment plugin does not store any personal data.';
