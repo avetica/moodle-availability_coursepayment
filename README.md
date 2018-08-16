@@ -34,4 +34,5 @@ Changelog
 
 See version control for the complete history. Major changes in this version will be listed below.
 
+- 2018081600 Implementation of the privacy null provider
 - 2017083100 Add support for payment standalone page 
