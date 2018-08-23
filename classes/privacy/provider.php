@@ -24,7 +24,7 @@
  * @author    Luuk Verhoeven
  **/
 
-namespace availability_coursepayment\provider;
+namespace availability_coursepayment\privacy;
 
 defined('MOODLE_INTERNAL') || die();
 
