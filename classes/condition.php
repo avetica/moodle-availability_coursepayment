@@ -33,7 +33,7 @@ class condition extends \core_availability\condition {
     /**
      * @var float $cost
      */
-    protected $cost = 0;
+    protected $cost = 10;
 
     /**
      * @var string
@@ -50,7 +50,7 @@ class condition extends \core_availability\condition {
         if (property_exists($structure, 'cost')) {
             $this->cost = abs($structure->cost);
         } else {
-            $this->cost = 0;
+            $this->cost = 10;
         }
 
         if (property_exists($structure, 'currency')) {
@@ -95,7 +95,7 @@ class condition extends \core_availability\condition {
      *
      * @return stdClass Object representing condition
      */
-    public static function get_json($cost = 0, $vat = 21, $currency = 'EUR') {
+    public static function get_json($cost = 10, $vat = 21, $currency = 'EUR') {
         return (object)array(
             'type' => 'coursepayment',
             'cost' => (float)$cost,

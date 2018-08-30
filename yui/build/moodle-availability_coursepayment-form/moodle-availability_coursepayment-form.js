@@ -31,7 +31,7 @@ M.availability_coursepayment.form.getNode = function (json) {
     var strings = M.str.availability_coursepayment;
     var html = '<label><b>' + strings.title + '</b></label><br/>' +
         '<label for="cost">' + strings.cost + ' </label> ' +
-        '<input type="text" placeholder="0.00" name="cost" title="' + strings.cost + '"/><br/>' +
+        '<input type="text" placeholder="0.00" name="cost" title="' + strings.cost + '" value="10"/><br/>' +
         '<label for="currency">' + strings.currency + ' </label>' +
         '<select name="currency">' +
         '<option value="EUR" selected="selected">Euro</option>' +
@@ -66,13 +66,18 @@ M.availability_coursepayment.form.getNode = function (json) {
     // like, but this pattern is used by the existing code.
     if (!M.availability_coursepayment.form.addedEvents) {
         M.availability_coursepayment.form.addedEvents = true;
-        var root = Y.one('#fitem_id_availabilityconditionsjson');
-        root.delegate('change', function () {
-            // The key point is this update call. This call will update
-            // the JSON data in the hidden field in the form, so that it
-            // includes the new value of the checkbox.
-            M.core_availability.form.update();
-        }, '.availability_coursepayment input, .availability_coursepayment select');
+        try {
+            var root = Y.one('#fitem_id_availabilityconditionsjson');
+            root.delegate('change', function () {
+                // The key point is this update call. This call will update
+                // the JSON data in the hidden field in the form, so that it
+                // includes the new value of the checkbox.
+                M.core_availability.form.update();
+            }, '.availability_coursepayment input, .availability_coursepayment select');
+        }catch (e) {
+            console.log(e);
+        }
+        M.core_availability.form.update();
     }
 
     return node;
