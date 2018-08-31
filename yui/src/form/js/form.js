@@ -24,7 +24,7 @@ M.availability_coursepayment.form.getNode = function (json) {
     // This function does the main work. It gets called after the user
     // chooses to add an availability restriction of this type. You have
     // to return a YUI node representing the HTML for the plugin controls.
-    console.log(json);
+    console.log('JSON' , json);
 
     var strings = M.str.availability_coursepayment;
     var html = '<label><b>' + strings.title + '</b></label><br/>' +
@@ -66,16 +66,26 @@ M.availability_coursepayment.form.getNode = function (json) {
         M.availability_coursepayment.form.addedEvents = true;
         try {
             var root = Y.one('#fitem_id_availabilityconditionsjson');
-            root.delegate('change', function () {
+            if(!root){
+                console.log('Moodle 3.5 or higher ?');
+                root = Y.one('#id_availabilityconditionsjson');
+            }
+
+            Y.one('#page').delegate('change', function () {
+                console.log('Change detected');
                 // The key point is this update call. This call will update
                 // the JSON data in the hidden field in the form, so that it
                 // includes the new value of the checkbox.
                 M.core_availability.form.update();
-            }, '.availability_coursepayment input, .availability_coursepayment select');
-        }catch (e) {
-            console.log(e);
+            }, '.availability_coursepayment > input, .availability_coursepayment > select');
+        } catch (e) {
+
+            try {
+               M.core_availability.form.update();
+            } catch (e) {
+
+            }
         }
-        M.core_availability.form.update();
     }
 
     return node;
@@ -110,6 +120,8 @@ M.availability_coursepayment.form.getValue = function (field, node) {
         value = value.replace(/,/g, '.');
     }
 
+    console.log('GetValue',field + ' = ' + value);
+
     // If it is not a valid positive number, return false.
     var reg = new RegExp('^\\d.+$');
     if (reg.test(value)) {
@@ -121,7 +133,6 @@ M.availability_coursepayment.form.getValue = function (field, node) {
         return parseFloat(value).toFixed(2);
     }
 
-    console.log('String:' + value);
     return value;
 };
 
