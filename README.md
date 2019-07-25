@@ -4,9 +4,9 @@ Activity based restriction. Users have to pay first before they can enter a acti
 
 Author
 ====================
-![MoodleFreak.com](http://moodlefreak.com/logo_small.png)
+![Mfreak.nl](https://mfreak.nl/logo_small.png)
 
-* Author: Luuk Verhoeven, [MoodleFreak.com](http://www.moodlefreak.com/)
+* Author: Luuk Verhoeven, [Mfreak.nl](https://mfreak.nl/)
 * Requires: Moodle 2.9.x
 * License: [Avetica](http://avetica.nl)
 
