@@ -93,7 +93,7 @@ switch ($contextlevel) {
                 echo $OUTPUT->header();
                 echo $OUTPUT->heading(get_string('pluginname', 'enrol_coursepayment'));
                 echo '<div align="center">
-                    <h3 class="coursepayment_instancename">' . $module->name . '</h3>
+                    <h3 class="coursepayment_instancename">' . $module->name . " - " . $COURSE->fullname . '</h3>
                     <p><b>' . get_string("cost") . ': 
                     <span id="coursepayment_cost">' . \availability_coursepayment\helper::price($pricing->cost) . '</span> ' .
                     get_string('currency:' . strtolower($pricing->currency), 'availability_coursepayment') . ' </b></p>
@@ -121,7 +121,7 @@ switch ($contextlevel) {
                 echo $OUTPUT->header();
                 echo $OUTPUT->heading(get_string('pluginname', 'enrol_coursepayment'));
                 echo '<div align="center">
-                    <h3 class="coursepayment_instancename">' . $module->name . '</h3>
+                    <h3 class="coursepayment_instancename">' . $module->name . " - " . $COURSE->fullname . '</h3>
                     <p><b>' . get_string("cost") . ': 
                     <span id="coursepayment_cost">' . \availability_coursepayment\helper::price($pricing->cost) . '</span> ' .
                     get_string('currency:' . strtolower($pricing->currency), 'availability_coursepayment') . ' </b></p>
@@ -133,11 +133,11 @@ switch ($contextlevel) {
 
 $gateway->set_instanceconfig([
     'is_activity' => true,
-    'instancename' => $module->name,
+    'instancename' => $module->name . " - " . $COURSE->fullname,
     'localisedcost' => format_float($pricing->cost, 2, true),
     'userid' => $USER->id,
     'userfullname' => fullname($USER),
-    'coursename' => $module->name, // $Module can also be a section
+    'coursename' => $module->name . " - " . $COURSE->fullname, // $Module can also be a section
     'locale' => $USER->lang,
     'currency' => $pricing->currency,
     'cost' => $pricing->cost,
