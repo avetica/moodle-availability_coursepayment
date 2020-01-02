@@ -20,7 +20,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  * @package   : availability_coursepayment
- * @copyright 2016 MoodleFreak.com
+ * @copyright 2016 Mfreak.nl
  * @author    Luuk Verhoeven
  **/
 
@@ -28,6 +28,15 @@ namespace availability_coursepayment;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Class condition
+ *
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   : availability_coursepayment
+ * @copyright 2016 Mfreak.nl
+ * @author    Luuk Verhoeven
+ */
 class condition extends \core_availability\condition {
 
     /**
@@ -45,6 +54,11 @@ class condition extends \core_availability\condition {
      */
     protected $vat = 21;
 
+    /**
+     * condition constructor.
+     *
+     * @param $structure
+     */
     public function __construct($structure) {
 
         if (property_exists($structure, 'cost')) {
@@ -75,12 +89,12 @@ class condition extends \core_availability\condition {
      */
     public function save() {
         // Save back the data into a plain array similar to $structure above.
-        return (object)array(
+        return (object)[
             'type' => 'coursepayment',
             'cost' => $this->cost,
             'currency' => $this->currency,
             'vat' => $this->vat,
-        );
+        ];
     }
 
     /**
@@ -89,21 +103,20 @@ class condition extends \core_availability\condition {
      * Intended for unit testing, as normally the JSON values are constructed
      * by JavaScript code.
      *
-     * @param int|string $cost
-     * @param int $vat
+     * @param int    $cost
+     * @param int    $vat
      * @param string $currency
      *
-     * @return stdClass Object representing condition
+     * @return object
      */
     public static function get_json($cost = 10, $vat = 21, $currency = 'EUR') {
-        return (object)array(
+        return (object)[
             'type' => 'coursepayment',
             'cost' => (float)$cost,
             'vat' => (int)$vat,
             'currency' => $currency,
-        );
+        ];
     }
-
 
     /**
      * Determines whether a particular item is currently available
@@ -120,12 +133,12 @@ class condition extends \core_availability\condition {
      * the more natural use of the current value at this point inside the tree,
      * so that the information displayed to users makes sense.
      *
-     * @param bool $not                     Set true if we are inverting the condition
-     * @param \core_availability\info $info Item we're checking
-     * @param bool $grabthelot              Performance hint: if true, caches information
-     *                                      required for all course-modules, to make the front page and similar
-     *                                      pages work more quickly (works only for current user)
-     * @param int $userid                   User ID to check availability for
+     * @param bool                    $not        Set true if we are inverting the condition
+     * @param \core_availability\info $info       Item we're checking
+     * @param bool                    $grabthelot Performance hint: if true, caches information
+     *                                            required for all course-modules, to make the front page and similar
+     *                                            pages work more quickly (works only for current user)
+     * @param int                     $userid     User ID to check availability for
      *
      * @return bool True if available
      */
@@ -157,12 +170,13 @@ class condition extends \core_availability\condition {
      * 123 is any number. It will be replaced with the correctly-formatted
      * name for that activity.
      *
-     * @param bool $full Set true if this is the 'full information' view
-     * @param bool $not  Set true if we are inverting the condition
-     * @param info $info Item we're checking
+     * @param bool                    $full Set true if this is the 'full information' view
+     * @param bool                    $not  Set true if we are inverting the condition
+     * @param \core_availability\info $info Item we're checking
      *
-     * @return string Information string (for admin) about all restrictions on
-     *   this item
+     * @return string
+     * @throws \coding_exception
+     * @throws \moodle_exception
      */
     public function get_description($full, $not, \core_availability\info $info) {
 
@@ -174,13 +188,13 @@ class condition extends \core_availability\condition {
             // Module params.
             $params += [
                 'cmid' => $info->get_context()->instanceid,
-                'contextlevel' => CONTEXT_MODULE
+                'contextlevel' => CONTEXT_MODULE,
             ];
         } else {
             // Section params.
             $params += [
                 'contextlevel' => CONTEXT_COURSE,
-                'section' => $info->get_section()->section
+                'section' => $info->get_section()->section,
             ];
         }
 
@@ -194,12 +208,11 @@ class condition extends \core_availability\condition {
         $obj->currency = get_string('currency:' . strtolower($this->currency), 'availability_coursepayment');
         $obj->vat = $this->vat;
         $obj->btn = \html_writer::link(new \moodle_url('/availability/condition/coursepayment/payment.php', $params), get_string('btn:purchase', 'availability_coursepayment'), [
-            'class' => 'btn btn-primary'
+            'class' => 'btn btn-primary',
         ]);
 
         return get_string('require_condition', 'availability_coursepayment', $obj);
     }
-
 
     /**
      * Obtains a representation of the options of this condition as a string,

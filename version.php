@@ -20,17 +20,17 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  * @package   : availability_coursepayment
- * @copyright 2016 MoodleFreak.com
+ * @copyright 2016 Mfreak.nl
  * @author    Luuk Verhoeven
  **/
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2019072500;
+$plugin->version = 2020010200;
 $plugin->requires = 2014050800;
 $plugin->component = 'availability_coursepayment';
 $plugin->maturity = MATURITY_STABLE;
 $plugin->release = 2015030101;
 
-$plugin->dependencies = array(
+$plugin->dependencies = [
     'enrol_coursepayment' => 2018083000,
-);
+];

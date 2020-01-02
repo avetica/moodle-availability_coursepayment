@@ -20,7 +20,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  * @package   : availability_coursepayment
- * @copyright 2016 MoodleFreak.com
+ * @copyright 2016 Mfreak.nl
  * @author    Luuk Verhoeven
  **/
 defined('MOODLE_INTERNAL') || die();

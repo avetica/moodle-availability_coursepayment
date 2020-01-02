@@ -20,7 +20,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  * @package   availability_coursepayment
- * @copyright 2016 MoodleFreak.com
+ * @copyright 2016 Mfreak.nl
  * @author    Luuk Verhoeven
  **/
 
@@ -28,8 +28,16 @@ namespace availability_coursepayment;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Class helper
+ *
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   : availability_coursepayment
+ * @copyright 2016 Mfreak.nl
+ * @author    Luuk Verhoeven
+ */
 class helper {
-
 
     /**
      * get correct number format used for pricing
@@ -42,13 +50,13 @@ class helper {
         return number_format(round($number, 2), 2, ',', ' ');
     }
 
-
     /**
      * pricing_from_cmid
      *
      * @param int $cmid
      *
      * @return \stdClass
+     * @throws \dml_exception
      */
     public static function pricing_from_cmid($cmid = 0) {
         global $DB;
@@ -79,6 +87,7 @@ class helper {
      * @param int $courseid
      *
      * @return bool|\cm_info
+     * @throws \moodle_exception
      */
     public static function get_cmid_info($cmid = 0, $courseid = 0) {
 
@@ -101,13 +110,14 @@ class helper {
      * @param int $courseid
      *
      * @return bool|\cm_info
+     * @throws \dml_exception
      */
     public static function get_section_info($sectionnumber = 0, $courseid = 0) {
         global $DB;
 
         $section = $DB->get_record('course_sections', [
             'course' => $courseid,
-            'section' => $sectionnumber
+            'section' => $sectionnumber,
         ], '*', MUST_EXIST);
 
         $courseformat = course_get_format($courseid);
@@ -125,13 +135,14 @@ class helper {
      * @param int $cmid
      *
      * @return bool
+     * @throws \dml_exception
      */
     public static function user_can_access_cmid($cmid = 0) {
         global $USER, $DB;
         $row = $DB->get_record('enrol_coursepayment', [
             'userid' => $USER->id,
             'cmid' => $cmid,
-            'status' => 1
+            'status' => 1,
         ], 'id', IGNORE_MULTIPLE);
 
         return ($row) ? true : false;
@@ -144,6 +155,7 @@ class helper {
      * @param int $courseid
      *
      * @return \stdClass
+     * @throws \dml_exception
      */
     public static function pricing_from_section($sectionnumber = 0, $courseid = 0) {
 
@@ -156,7 +168,7 @@ class helper {
 
         $coursemodule = $DB->get_record('course_sections', [
             'course' => $courseid,
-            'section' => $sectionnumber
+            'section' => $sectionnumber,
         ], '*', MUST_EXIST);
 
         $options = json_decode($coursemodule->availability);
@@ -168,16 +180,18 @@ class helper {
                 break;
             }
         }
+
         return $obj;
     }
 
     /**
      * Check if the user can access this section
      *
-     * @param $sectionnumber
+     * @param     $sectionnumber
      * @param int $courseid
      *
      * @return bool
+     * @throws \dml_exception
      */
     public static function user_can_access_section($sectionnumber, $courseid = 0) {
         global $USER, $DB;
@@ -185,7 +199,7 @@ class helper {
             'userid' => $USER->id,
             'section' => $sectionnumber,
             'courseid' => $courseid,
-            'status' => 1
+            'status' => 1,
         ], 'id', IGNORE_MULTIPLE);
 
         return ($row) ? true : false;

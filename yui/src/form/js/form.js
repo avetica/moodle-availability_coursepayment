@@ -15,16 +15,16 @@ M.availability_coursepayment.form = Y.Object(M.core_availability.plugin);
  * @method initInner
  * @param {Array} param Array of objects
  */
-M.availability_coursepayment.form.initInner = function (params) {
+M.availability_coursepayment.form.initInner = function(params) {
     console.log('M.availability_coursepayment');
     console.log(params);
 };
 
-M.availability_coursepayment.form.getNode = function (json) {
+M.availability_coursepayment.form.getNode = function(json) {
     // This function does the main work. It gets called after the user
     // chooses to add an availability restriction of this type. You have
     // to return a YUI node representing the HTML for the plugin controls.
-    console.log('JSON' , json);
+    console.log('JSON', json);
 
     var strings = M.str.availability_coursepayment;
     var html = '<label><b>' + strings.title + '</b></label><br/>' +
@@ -66,12 +66,12 @@ M.availability_coursepayment.form.getNode = function (json) {
         M.availability_coursepayment.form.addedEvents = true;
         try {
             var root = Y.one('#fitem_id_availabilityconditionsjson');
-            if(!root){
+            if (!root) {
                 console.log('Moodle 3.5 or higher ?');
                 root = Y.one('#id_availabilityconditionsjson');
             }
 
-            Y.one('#page').delegate('change', function () {
+            Y.one('#page').delegate('change', function() {
                 console.log('Change detected');
                 // The key point is this update call. This call will update
                 // the JSON data in the hidden field in the form, so that it
@@ -81,7 +81,7 @@ M.availability_coursepayment.form.getNode = function (json) {
         } catch (e) {
 
             try {
-               M.core_availability.form.update();
+                M.core_availability.form.update();
             } catch (e) {
 
             }
@@ -91,7 +91,7 @@ M.availability_coursepayment.form.getNode = function (json) {
     return node;
 };
 
-M.availability_coursepayment.form.fillValue = function (value, node) {
+M.availability_coursepayment.form.fillValue = function(value, node) {
     // This function gets passed the node (from above) and a value
     // object. Within that object, it must set up the correct values
     // to use within the JSON data in the form. Should be compatible
@@ -110,7 +110,7 @@ M.availability_coursepayment.form.fillValue = function (value, node) {
  * @method getValue
  * @return {Number|String} Value of field as number or string if not valid
  */
-M.availability_coursepayment.form.getValue = function (field, node) {
+M.availability_coursepayment.form.getValue = function(field, node) {
     var value;
     // Get field value.
     var node = node.one('[name=' + field + ']');
@@ -120,7 +120,7 @@ M.availability_coursepayment.form.getValue = function (field, node) {
         value = value.replace(/,/g, '.');
     }
 
-    console.log('GetValue',field + ' = ' + value);
+    console.log('GetValue', field + ' = ' + value);
 
     // If it is not a valid positive number, return false.
     var reg = new RegExp('^\\d.+$');
@@ -136,7 +136,7 @@ M.availability_coursepayment.form.getValue = function (field, node) {
     return value;
 };
 
-M.availability_coursepayment.form.fillErrors = function (errors, node) {
+M.availability_coursepayment.form.fillErrors = function(errors, node) {
     var value = {};
     var reg = new RegExp('^[\\d.]+$');
 

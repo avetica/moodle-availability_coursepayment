@@ -4,11 +4,16 @@ Activity based restriction. Users have to pay first before they can enter a acti
 
 Author
 ====================
-![MoodleFreak.com](http://moodlefreak.com/logo_small.png)
+![Mfreak.nl](http://Mfreak.nl/logo_small.png)
 
-* Author: Luuk Verhoeven, [MoodleFreak.com](http://www.moodlefreak.com/)
-* Requires: Moodle 2.9.x
+* Author: Luuk Verhoeven, [Mfreak.nl](http://www.Mfreak.nl/)
 * License: [Avetica](http://avetica.nl)
+
+![Moodle35](https://img.shields.io/badge/moodle-3.5-brightgreen.svg)
+![Moodle36](https://img.shields.io/badge/moodle-3.6-brightgreen.svg)
+![Moodle37](https://img.shields.io/badge/moodle-3.7-brightgreen.svg)
+![Moodle38](https://img.shields.io/badge/moodle-3.8-brightgreen.svg)
+![PHP7.2](https://img.shields.io/badge/PHP-7.2-brightgreen.svg)
 
 Description
 ====================
@@ -34,5 +39,8 @@ Changelog
 
 See version control for the complete history. Major changes in this version will be listed below.
 
-- 2018081600 Implementation of the privacy null provider
-- 2017083100 Add support for payment standalone page 
+2020010200 - Moodle 3.8 support implemented.
+
+2018081600 - Implementation of the privacy null provider
+
+2017083100 - Add support for payment standalone page 

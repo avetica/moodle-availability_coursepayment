@@ -20,7 +20,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  * @package   availability_coursepayment
- * @copyright 2016 MoodleFreak.com
+ * @copyright 2016 Mfreak.nl
  * @author    Luuk Verhoeven
  **/
 require('../../../config.php');
@@ -30,46 +30,46 @@ $contextlevel = required_param('contextlevel', PARAM_INT);
 $courseid = required_param('courseid', PARAM_INT);
 $method = optional_param('method', false, PARAM_ALPHA);
 
-$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 
 require_login($course);
-$PAGE->set_url('/availability/condition/coursepayment/payment.php', array(
+$PAGE->set_url('/availability/condition/coursepayment/payment.php', [
     'courseid' => $course->id,
     'cmid' => $cmid,
     'method' => $method,
     'section' => $section,
-));
+]);
 
 /* @var enrol_coursepayment_gateway $gateway */
 $gateway = new enrol_coursepayment_mollie();
 
 // Check if we support the standalone page mode.
-if($gateway->is_standalone_purchase_page()){
+if ($gateway->is_standalone_purchase_page()) {
     // Standalone.
-    $PAGE->requires->js_init_call('M.enrol_coursepayment_mollie_standalone.init', array(
+    $PAGE->requires->js_init_call('M.enrol_coursepayment_mollie_standalone.init', [
         $CFG->wwwroot . '/enrol/coursepayment/ajax.php',
         sesskey(),
-        $course->id
-    ), false, array(
+        $course->id,
+    ], false, [
         'name' => 'enrol_coursepayment_mollie_standalone',
         'fullpath' => '/enrol/coursepayment/js/mollie_standalone.js',
-        'requires' => array('node', 'io')
-    ));
+        'requires' => ['node', 'io'],
+    ]);
     $PAGE->requires->css('/enrol/coursepayment/gateway_mollie.css');
     $PAGE->set_pagelayout('popup');
-}else{
+} else {
     // Old payment page.
-    $jsmodule = array(
+    $jsmodule = [
         'name' => 'enrol_coursepayment_gateway',
         'fullpath' => '/enrol/coursepayment/js/gateway.js',
-        'requires' => array('node', 'io')
-    );
+        'requires' => ['node', 'io'],
+    ];
 
-    $PAGE->requires->js_init_call('M.enrol_coursepayment_gateway.init', array(
+    $PAGE->requires->js_init_call('M.enrol_coursepayment_gateway.init', [
         $CFG->wwwroot . '/enrol/coursepayment/ajax.php',
         sesskey(),
-        $course->id
-    ), false, $jsmodule);
+        $course->id,
+    ], false, $jsmodule);
 }
 
 switch ($contextlevel) {
@@ -78,7 +78,7 @@ switch ($contextlevel) {
 
         // Check if user already can access the content.
         if (\availability_coursepayment\helper::user_can_access_cmid($cmid)) {
-            redirect(new moodle_url('/course/view.php', ['id' => $course->id , 'status' => 'user_can_access_cmid']));
+            redirect(new moodle_url('/course/view.php', ['id' => $course->id, 'status' => 'user_can_access_cmid']));
         }
 
         // Get more info.
@@ -87,9 +87,9 @@ switch ($contextlevel) {
 
         // Check if we are redirecting.
         if (!$method) {
-            if($gateway->is_standalone_purchase_page()){
+            if ($gateway->is_standalone_purchase_page()) {
                 echo $OUTPUT->header();
-            }else{
+            } else {
                 echo $OUTPUT->header();
                 echo $OUTPUT->heading(get_string('pluginname', 'enrol_coursepayment'));
                 echo '<div align="center">
@@ -105,7 +105,7 @@ switch ($contextlevel) {
 
     case CONTEXT_COURSE:
         // Check if user already can access the content.
-        if (\availability_coursepayment\helper::user_can_access_section($section , $course->id)) {
+        if (\availability_coursepayment\helper::user_can_access_section($section, $course->id)) {
             redirect(new moodle_url('/course/view.php', ['id' => $course->id, 'status' => 'user_can_access_section']));
         }
 
@@ -115,9 +115,9 @@ switch ($contextlevel) {
 
         // Check if we are redirecting.
         if (!$method) {
-            if($gateway->is_standalone_purchase_page()){
+            if ($gateway->is_standalone_purchase_page()) {
                 echo $OUTPUT->header();
-            }else {
+            } else {
                 echo $OUTPUT->header();
                 echo $OUTPUT->heading(get_string('pluginname', 'enrol_coursepayment'));
                 echo '<div align="center">

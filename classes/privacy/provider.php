@@ -20,7 +20,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  * @package   availability_coursepayment
- * @copyright 2018 MoodleFreak.com
+ * @copyright 2018 Mfreak.nl
  * @author    Luuk Verhoeven
  **/
 
@@ -28,6 +28,15 @@ namespace availability_coursepayment\privacy;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Class provider
+ *
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   availability_coursepayment
+ * @copyright 2018 Mfreak.nl
+ * @author    Luuk Verhoeven
+ */
 class provider implements \core_privacy\local\metadata\null_provider {
 
     /**

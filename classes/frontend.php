@@ -20,22 +20,32 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  * @package   : availability_coursepayment
- * @copyright 2016 MoodleFreak.com
+ * @copyright 2016 Mfreak.nl
  * @author    Luuk Verhoeven
  **/
+
 namespace availability_coursepayment;
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/completionlib.php');
 
+/**
+ * Class frontend
+ *
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package   : availability_coursepayment
+ * @copyright 2016 Mfreak.nl
+ * @author    Luuk Verhoeven
+ */
 class frontend extends \core_availability\frontend {
 
     /**
      * Decides whether this plugin should be available in a given course. The
      * plugin can do this depending on course or system settings.
      *
-     * @param \stdClass $course      Course object
-     * @param \cm_info $cm           Course-module currently being edited (null if none)
+     * @param \stdClass     $course  Course object
+     * @param \cm_info      $cm      Course-module currently being edited (null if none)
      * @param \section_info $section Section currently being edited (null if none)
      *
      * @return bool True if there are completion criteria
@@ -54,7 +64,7 @@ class frontend extends \core_availability\frontend {
      * @return array Array of required string identifiers
      */
     protected function get_javascript_strings() {
-        return array('cost', 'vat' , 'currency');
+        return ['cost', 'vat', 'currency'];
     }
 
     /**
@@ -62,13 +72,13 @@ class frontend extends \core_availability\frontend {
      *
      * Default returns no parameters.
      *
-     * @param \stdClass $course      Course object
-     * @param \cm_info $cm           Course-module currently being edited (null if none)
+     * @param \stdClass     $course  Course object
+     * @param \cm_info      $cm      Course-module currently being edited (null if none)
      * @param \section_info $section Section currently being edited (null if none)
      *
      * @return array Array of parameters for the JavaScript function
      */
     protected function get_javascript_init_params($course, \cm_info $cm = null, \section_info $section = null) {
-        return array();
+        return [];
     }
 }
