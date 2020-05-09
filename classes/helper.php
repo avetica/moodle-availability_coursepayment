@@ -26,6 +26,8 @@
 
 namespace availability_coursepayment;
 
+use stdClass;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -46,7 +48,7 @@ class helper {
      *
      * @return string
      */
-    public static function price($number = 0.00) {
+    public static function price($number = 0.00) : string {
         return number_format(round($number, 2), 2, ',', ' ');
     }
 
@@ -55,13 +57,13 @@ class helper {
      *
      * @param int $cmid
      *
-     * @return \stdClass
+     * @return stdClass
      * @throws \dml_exception
      */
-    public static function pricing_from_cmid($cmid = 0) {
+    public static function pricing_from_cmid($cmid = 0) : stdClass {
         global $DB;
 
-        $obj = new \stdClass();
+        $obj = new stdClass();
         $obj->price = 0;
         $obj->vat = 0;
         $obj->currency = 'EUR';
@@ -109,10 +111,10 @@ class helper {
      * @param int $sectionnumber
      * @param int $courseid
      *
-     * @return bool|\cm_info
+     * @return stdClass
      * @throws \dml_exception
      */
-    public static function get_section_info($sectionnumber = 0, $courseid = 0) {
+    public static function get_section_info($sectionnumber = 0, $courseid = 0) : stdClass {
         global $DB;
 
         $section = $DB->get_record('course_sections', [
@@ -123,7 +125,7 @@ class helper {
         $courseformat = course_get_format($courseid);
         $defaultsectionname = $courseformat->get_default_section_name($section);
 
-        $module = new \stdClass();
+        $module = new stdClass();
         $module->name = $defaultsectionname;
 
         return $module;
@@ -137,7 +139,7 @@ class helper {
      * @return bool
      * @throws \dml_exception
      */
-    public static function user_can_access_cmid($cmid = 0) {
+    public static function user_can_access_cmid($cmid = 0) : bool {
         global $USER, $DB;
         $row = $DB->get_record('enrol_coursepayment', [
             'userid' => $USER->id,
@@ -154,14 +156,14 @@ class helper {
      * @param int $sectionnumber
      * @param int $courseid
      *
-     * @return \stdClass
+     * @return stdClass
      * @throws \dml_exception
      */
-    public static function pricing_from_section($sectionnumber = 0, $courseid = 0) {
+    public static function pricing_from_section($sectionnumber = 0, $courseid = 0) : stdClass {
 
         global $DB;
 
-        $obj = new \stdClass();
+        $obj = new stdClass();
         $obj->price = 0;
         $obj->vat = 0;
         $obj->currency = 'EUR';
@@ -193,7 +195,7 @@ class helper {
      * @return bool
      * @throws \dml_exception
      */
-    public static function user_can_access_section($sectionnumber, $courseid = 0) {
+    public static function user_can_access_section($sectionnumber, $courseid = 0) : bool {
         global $USER, $DB;
         $row = $DB->get_record('enrol_coursepayment', [
             'userid' => $USER->id,
