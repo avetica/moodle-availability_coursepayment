@@ -114,7 +114,7 @@ class helper {
      * @return stdClass
      * @throws \dml_exception
      */
-    public static function get_section_info($sectionnumber = 0, $courseid = 0) : stdClass {
+    public static function get_section_info(int $sectionnumber = 0, int $courseid = 0) : stdClass {
         global $DB;
 
         $section = $DB->get_record('course_sections', [
@@ -135,14 +135,15 @@ class helper {
      * Check if a user can access a coursemodule
      *
      * @param int $cmid
+     * @param int $userid
      *
      * @return bool
      * @throws \dml_exception
      */
-    public static function user_can_access_cmid($cmid = 0) : bool {
-        global $USER, $DB;
+    public static function user_can_access_cmid(int $cmid = 0, int $userid) : bool {
+        global $DB;
         $row = $DB->get_record('enrol_coursepayment', [
-            'userid' => $USER->id,
+            'userid' => $userid,
             'cmid' => $cmid,
             'status' => 1,
         ], 'id', IGNORE_MULTIPLE);
@@ -159,7 +160,7 @@ class helper {
      * @return stdClass
      * @throws \dml_exception
      */
-    public static function pricing_from_section($sectionnumber = 0, $courseid = 0) : stdClass {
+    public static function pricing_from_section(int $sectionnumber = 0, int $courseid = 0) : stdClass {
 
         global $DB;
 
@@ -189,16 +190,17 @@ class helper {
     /**
      * Check if the user can access this section
      *
-     * @param     $sectionnumber
+     * @param int $sectionnumber
      * @param int $courseid
+     * @param int $userid
      *
      * @return bool
      * @throws \dml_exception
      */
-    public static function user_can_access_section($sectionnumber, $courseid = 0) : bool {
-        global $USER, $DB;
+    public static function user_can_access_section(int $sectionnumber, int $courseid = 0, int $userid) : bool {
+        global $DB;
         $row = $DB->get_record('enrol_coursepayment', [
-            'userid' => $USER->id,
+            'userid' => $userid,
             'section' => $sectionnumber,
             'courseid' => $courseid,
             'status' => 1,

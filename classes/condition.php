@@ -141,16 +141,16 @@ class condition extends \core_availability\condition {
      * @param int                     $userid     User ID to check availability for
      *
      * @return bool True if available
+     * @throws \dml_exception
      */
     public function is_available($not, \core_availability\info $info, $grabthelot, $userid) {
-
         if ($info->get_context()->contextlevel == CONTEXT_MODULE) {
             // Cmd.
-            return helper::user_can_access_cmid($info->get_context()->instanceid);
-        } else {
-            // Section.
-            return helper::user_can_access_section($info->get_section()->section, $info->get_course()->id);
+            return helper::user_can_access_cmid($info->get_context()->instanceid , $userid);
         }
+
+        // Section.
+        return helper::user_can_access_section($info->get_section()->section, $info->get_course()->id , $userid);
     }
 
     /**
