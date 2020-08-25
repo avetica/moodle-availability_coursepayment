@@ -40,6 +40,10 @@ $PAGE->set_url('/availability/condition/coursepayment/payment.php', [
     'section' => $section,
 ]);
 
+if(enrol_coursepayment_helper::requires_mollie_connect()){
+    print_error('error:mollie_connect_requires' , 'enrol_coursepayment');
+}
+
 /* @var enrol_coursepayment_gateway $gateway */
 $gateway = new enrol_coursepayment_mollie();
 
