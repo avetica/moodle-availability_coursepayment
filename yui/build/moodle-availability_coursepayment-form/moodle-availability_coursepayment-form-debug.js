@@ -31,22 +31,35 @@ M.availability_coursepayment.form.getNode = function(json) {
     console.log('JSON', json);
 
     var strings = M.str.availability_coursepayment;
-    var html = '<label><b>' + strings.title + '</b></label><br/>' +
-        '<label for="cost">' + strings.cost + ' </label> ' +
-        '<input type="text" class="form-control" placeholder="0.00" name="cost" title="' + strings.cost + '" value="10"/><br/>' +
-        '<label for="currency">' + strings.currency + ' </label>' +
-        '<select name="currency" class="form-control" >' +
-        '<option value="EUR" selected="selected">Euro</option>' +
-        '</select><br/>' +
-        '<label for="vat">' + strings.vat + ' </label><br/>' +
-        '<select name="vat" class="form-control" >';
+    var html = '<b>' + strings.title + '</b><br/>' +
+        ' <div class="form-group row">' +
+        '   <label for="cost" class="col-sm-6 col-form-label">' + strings.cost + ' </label> ' +
+        '   <div class="col-sm-6">' +
+        '       <input type="number" step="any" class="form-control" placeholder="0.00" name="cost" title="' + strings.cost + '"' +
+        '            value="10"/>' +
+        '   </div>' +
+        '</div>' +
+        ' <div class="form-group row">' +
+        '   <label for="currency" class="col-sm-6 col-form-label">' + strings.currency + ' </label>' +
+        '   <div class="col-sm-6">' +
+        '       <select name="currency" class="form-control" >' +
+        '           <option value="EUR" selected="selected">Euro</option>' +
+        '       </select>' +
+        '   </div>' +
+        '</div>' +
+        '<div class="form-group row">' +
+        '   <label for="vat" class="col-sm-6 col-form-label">' + strings.vat + ' </label>' +
+        '   <div class="col-sm-6">' +
+        '       <select name="vat" class="form-control" >';
 
     for (var i = 0; i < 50; i++) {
         var selected = (i === 21) ? 'selected="selected"' : '';
-        html += '<option ' + selected + 'value="' + i + '">' + i + '</option>';
+        html += '   <option ' + selected + 'value="' + i + '">' + i + '</option>';
     }
 
-    html += '</select>';
+    html +=     '</select>' +
+        '   </div>' +
+        '</div>';
 
     var node = Y.Node.create('<div>' + html + '</div>');
 
