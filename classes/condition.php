@@ -26,6 +26,14 @@
 
 namespace availability_coursepayment;
 
+use coding_exception;
+use core_availability\info;
+use dml_exception;
+use html_writer;
+use moodle_exception;
+use moodle_url;
+use stdClass;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -83,21 +91,6 @@ class condition extends \core_availability\condition {
     }
 
     /**
-     * Saves tree data back to a structure object.
-     *
-     * @return \stdClass Structure object (ready to be made into JSON format)
-     */
-    public function save() {
-        // Save back the data into a plain array similar to $structure above.
-        return (object)[
-            'type' => 'coursepayment',
-            'cost' => $this->cost,
-            'currency' => $this->currency,
-            'vat' => $this->vat,
-        ];
-    }
-
-    /**
      * Returns a JSON object which corresponds to a condition of this type.
      *
      * Intended for unit testing, as normally the JSON values are constructed
@@ -119,6 +112,21 @@ class condition extends \core_availability\condition {
     }
 
     /**
+     * Saves tree data back to a structure object.
+     *
+     * @return stdClass Structure object (ready to be made into JSON format)
+     */
+    public function save() {
+        // Save back the data into a plain array similar to $structure above.
+        return (object)[
+            'type' => 'coursepayment',
+            'cost' => $this->cost,
+            'currency' => $this->currency,
+            'vat' => $this->vat,
+        ];
+    }
+
+    /**
      * Determines whether a particular item is currently available
      * according to this availability condition.
      *
@@ -134,23 +142,23 @@ class condition extends \core_availability\condition {
      * so that the information displayed to users makes sense.
      *
      * @param bool                    $not        Set true if we are inverting the condition
-     * @param \core_availability\info $info       Item we're checking
+     * @param info $info       Item we're checking
      * @param bool                    $grabthelot Performance hint: if true, caches information
      *                                            required for all course-modules, to make the front page and similar
      *                                            pages work more quickly (works only for current user)
      * @param int                     $userid     User ID to check availability for
      *
      * @return bool True if available
-     * @throws \dml_exception
+     * @throws dml_exception
      */
-    public function is_available($not, \core_availability\info $info, $grabthelot, $userid) {
+    public function is_available($not, info $info, $grabthelot, $userid) {
         if ($info->get_context()->contextlevel == CONTEXT_MODULE) {
             // Cmd.
-            return helper::user_can_access_cmid($info->get_context()->instanceid , $userid);
+            return helper::user_can_access_cmid($info->get_context()->instanceid, $userid);
         }
 
         // Section.
-        return helper::user_can_access_section($info->get_section()->section, $info->get_course()->id , $userid);
+        return helper::user_can_access_section($info->get_section()->section, $info->get_course()->id, $userid);
     }
 
     /**
@@ -172,13 +180,13 @@ class condition extends \core_availability\condition {
      *
      * @param bool                    $full Set true if this is the 'full information' view
      * @param bool                    $not  Set true if we are inverting the condition
-     * @param \core_availability\info $info Item we're checking
+     * @param info $info Item we're checking
      *
      * @return string
-     * @throws \coding_exception
-     * @throws \moodle_exception
+     * @throws coding_exception
+     * @throws moodle_exception
      */
-    public function get_description($full, $not, \core_availability\info $info) {
+    public function get_description($full, $not, info $info) {
 
         $params = [
             'courseid' =>
@@ -203,11 +211,11 @@ class condition extends \core_availability\condition {
         // the information shown if the user doesn't meet the
         // condition (it does not depend on the current user).
         // $course = $info->get_course();
-        $obj = new \stdClass();
+        $obj = new stdClass();
         $obj->cost = helper::price($this->cost);
         $obj->currency = get_string('currency:' . strtolower($this->currency), 'availability_coursepayment');
         $obj->vat = $this->vat;
-        $obj->btn = \html_writer::link(new \moodle_url('/availability/condition/coursepayment/payment.php', $params), get_string('btn:purchase', 'availability_coursepayment'), [
+        $obj->btn = html_writer::link(new moodle_url('/availability/condition/coursepayment/payment.php', $params), get_string('btn:purchase', 'availability_coursepayment'), [
             'class' => 'btn btn-primary',
         ]);
 

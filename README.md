@@ -1,6 +1,6 @@
 Availability coursepayment
 ====================
-Activity based restriction. Users have to pay first before they can enter a activity. 
+Activity based restriction. Users have to pay first before they can enter an activity.
 
 Author
 ====================
@@ -14,11 +14,13 @@ Author
 ![Moodle37](https://img.shields.io/badge/moodle-3.7-brightgreen.svg)
 ![Moodle38](https://img.shields.io/badge/moodle-3.8-brightgreen.svg)
 ![Moodle39](https://img.shields.io/badge/moodle-3.9-brightgreen.svg)
+![Moodle310](https://img.shields.io/badge/moodle-3.10-brightgreen.svg)
+![Moodle311](https://img.shields.io/badge/moodle-3.11-brightgreen.svg)
 ![PHP7.2](https://img.shields.io/badge/PHP-7.2-brightgreen.svg)
 
 Description
 ====================
-Activity based restriction. Users have to pay first before they can enter a activity. 
+Activity based restriction. Users have to pay first before they can enter an activity.
 
 **Note: This plugin requires `enrol_coursepayment` to be installed.**
 
@@ -40,10 +42,8 @@ Changelog
 
 See version control for the complete history. Major changes in this version will be listed below.
 
-2020012800 - Moodle 3.9 support implemented, only supports PHP 7.2 and higher.
-
-2020010200 - Moodle 3.8 support implemented.
-
-2018081600 - Implementation of the privacy null provider
-
-2017083100 - Add support for payment standalone page 
+- 2021042101 - Moodle 3.11 support implemented.
+- 2020012800 - Moodle 3.9 support implemented, only supports PHP 7.2 and higher.
+- 2020010200 - Moodle 3.8 support implemented.
+- 2018081600 - Implementation of the privacy null provider
+- 2017083100 - Add support for payment standalone page

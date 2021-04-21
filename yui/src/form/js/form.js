@@ -3,6 +3,7 @@
  *
  * @module moodle-availability_coursepayment-form
  */
+/* eslint no-console: "error" */
 M.availability_coursepayment = M.availability_coursepayment || {};
 /**
  * @class M.availability_coursepayment.form
@@ -16,26 +17,28 @@ M.availability_coursepayment.form = Y.Object(M.core_availability.plugin);
  * @param {Array} param Array of objects
  */
 M.availability_coursepayment.form.initInner = function(params) {
-    console.log('M.availability_coursepayment');
-    console.log(params);
+    // eslint-disable-next-line no-console
+    console.log('M.availability_coursepayment' , params);
 };
 
 M.availability_coursepayment.form.getNode = function(json) {
     // This function does the main work. It gets called after the user
     // chooses to add an availability restriction of this type. You have
     // to return a YUI node representing the HTML for the plugin controls.
+    // eslint-disable-next-line no-console
     console.log('JSON', json);
 
     var strings = M.str.availability_coursepayment;
     var html = '<label><b>' + strings.title + '</b></label><br/>' +
         '<label for="cost">' + strings.cost + ' </label> ' +
-        '<input type="text" placeholder="0.00" name="cost" title="' + strings.cost + '" value="10"/><br/>' +
+        '<input type="text" class="form-control" placeholder="0.00" name="cost" title="' + strings.cost + '" value="10"/><br/>' +
         '<label for="currency">' + strings.currency + ' </label>' +
-        '<select name="currency">' +
+        '<select name="currency" class="form-control" >' +
         '<option value="EUR" selected="selected">Euro</option>' +
         '</select><br/>' +
         '<label for="vat">' + strings.vat + ' </label><br/>' +
-        '<select name="vat">';
+        '<select name="vat" class="form-control" >';
+
     for (var i = 0; i < 50; i++) {
         var selected = (i === 21) ? 'selected="selected"' : '';
         html += '<option ' + selected + 'value="' + i + '">' + i + '</option>';
@@ -43,7 +46,7 @@ M.availability_coursepayment.form.getNode = function(json) {
 
     html += '</select>';
 
-    var node = Y.Node.create('<span>' + html + '</span>');
+    var node = Y.Node.create('<div>' + html + '</div>');
 
     // Set initial values based on the value from the JSON data in Moodle
     // database. This will have values undefined if creating a new one.
@@ -67,11 +70,13 @@ M.availability_coursepayment.form.getNode = function(json) {
         try {
             var root = Y.one('#fitem_id_availabilityconditionsjson');
             if (!root) {
+                // eslint-disable-next-line no-console
                 console.log('Moodle 3.5 or higher ?');
                 root = Y.one('#id_availabilityconditionsjson');
             }
 
             Y.one('#page').delegate('change', function() {
+                // eslint-disable-next-line no-console
                 console.log('Change detected');
                 // The key point is this update call. This call will update
                 // the JSON data in the hidden field in the form, so that it
@@ -119,13 +124,14 @@ M.availability_coursepayment.form.getValue = function(field, node) {
         // Make , = .
         value = value.replace(/,/g, '.');
     }
-
+    // eslint-disable-next-line no-console
     console.log('GetValue', field + ' = ' + value);
 
     // If it is not a valid positive number, return false.
     var reg = new RegExp('^\\d.+$');
     if (reg.test(value)) {
         if (field === 'vat') {
+            // eslint-disable-next-line no-console
             console.log('vat:' + value);
             return parseInt(value);
         }
@@ -146,13 +152,16 @@ M.availability_coursepayment.form.fillErrors = function(errors, node) {
     if ((value.cost !== undefined)) {
 
         if (!reg.test(value.cost)) {
+            // eslint-disable-next-line no-console
             console.log('cost - availability_coursepayment:error_invalidnumber');
             errors.push('availability_coursepayment:error_invalidnumber');
         }
     }
+
     // Check vat.
     if ((value.vat !== undefined)) {
         if (!reg.test(value.vat)) {
+            // eslint-disable-next-line no-console
             console.log('vat - availability_coursepayment:error_invalidnumber ' + value.vat);
             errors.push('availability_coursepayment:error_invalidnumber');
         }

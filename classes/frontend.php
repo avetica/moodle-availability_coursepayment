@@ -26,6 +26,10 @@
 
 namespace availability_coursepayment;
 
+use cm_info;
+use section_info;
+use stdClass;
+
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/completionlib.php');
 
@@ -44,13 +48,13 @@ class frontend extends \core_availability\frontend {
      * Decides whether this plugin should be available in a given course. The
      * plugin can do this depending on course or system settings.
      *
-     * @param \stdClass     $course  Course object
-     * @param \cm_info      $cm      Course-module currently being edited (null if none)
-     * @param \section_info $section Section currently being edited (null if none)
+     * @param stdClass     $course  Course object
+     * @param cm_info      $cm      Course-module currently being edited (null if none)
+     * @param section_info $section Section currently being edited (null if none)
      *
      * @return bool True if there are completion criteria
      */
-    protected function allow_add($course, \cm_info $cm = null, \section_info $section = null) {
+    protected function allow_add($course, cm_info $cm = null, section_info $section = null) {
         return true;
     }
 
@@ -76,13 +80,13 @@ class frontend extends \core_availability\frontend {
      *
      * Default returns no parameters.
      *
-     * @param \stdClass     $course  Course object
-     * @param \cm_info      $cm      Course-module currently being edited (null if none)
-     * @param \section_info $section Section currently being edited (null if none)
+     * @param stdClass     $course  Course object
+     * @param cm_info      $cm      Course-module currently being edited (null if none)
+     * @param section_info $section Section currently being edited (null if none)
      *
      * @return array Array of parameters for the JavaScript function
      */
-    protected function get_javascript_init_params($course, \cm_info $cm = null, \section_info $section = null) {
+    protected function get_javascript_init_params($course, cm_info $cm = null, section_info $section = null) {
         return [];
     }
 }
