@@ -24,6 +24,8 @@
  * @author    Luuk Verhoeven
  **/
 require('../../../config.php');
+defined('MOODLE_INTERNAL') || die;
+
 $cmid = optional_param('cmid', false, PARAM_INT);
 $section = optional_param('section', false, PARAM_INT);
 $contextlevel = required_param('contextlevel', PARAM_INT);
@@ -40,8 +42,8 @@ $PAGE->set_url('/availability/condition/coursepayment/payment.php', [
     'section' => $section,
 ]);
 
-if(enrol_coursepayment_helper::requires_mollie_connect()){
-    print_error('error:mollie_connect_requires' , 'enrol_coursepayment');
+if (enrol_coursepayment_helper::requires_mollie_connect()) {
+    print_error('error:mollie_connect_requires', 'enrol_coursepayment');
 }
 
 /* @var enrol_coursepayment_gateway $gateway */
@@ -81,7 +83,7 @@ switch ($contextlevel) {
     case CONTEXT_MODULE:
 
         // Check if user already can access the content.
-        if (\availability_coursepayment\helper::user_can_access_cmid($cmid , $USER->id)) {
+        if (\availability_coursepayment\helper::user_can_access_cmid($cmid, $USER->id)) {
             redirect(new moodle_url('/course/view.php', ['id' => $course->id, 'status' => 'user_can_access_cmid']));
         }
 
@@ -135,7 +137,7 @@ switch ($contextlevel) {
         break;
 }
 
-$gateway->set_instanceconfig([
+$gateway->set_instanceconfig((object)[
     'is_activity' => true,
     'instancename' => $module->name . " - " . $COURSE->fullname,
     'localisedcost' => format_float($pricing->cost, 2, true),

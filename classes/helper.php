@@ -26,6 +26,9 @@
 
 namespace availability_coursepayment;
 
+use cm_info;
+use dml_exception;
+use moodle_exception;
 use stdClass;
 
 defined('MOODLE_INTERNAL') || die();
@@ -58,7 +61,7 @@ class helper {
      * @param int $cmid
      *
      * @return stdClass
-     * @throws \dml_exception
+     * @throws dml_exception
      */
     public static function pricing_from_cmid($cmid = 0) : stdClass {
         global $DB;
@@ -88,8 +91,8 @@ class helper {
      * @param int $cmid
      * @param int $courseid
      *
-     * @return bool|\cm_info
-     * @throws \moodle_exception
+     * @return bool|cm_info
+     * @throws moodle_exception
      */
     public static function get_cmid_info($cmid = 0, $courseid = 0) {
 
@@ -112,7 +115,7 @@ class helper {
      * @param int $courseid
      *
      * @return stdClass
-     * @throws \dml_exception
+     * @throws dml_exception
      */
     public static function get_section_info(int $sectionnumber = 0, int $courseid = 0) : stdClass {
         global $DB;
@@ -138,7 +141,7 @@ class helper {
      * @param int $userid
      *
      * @return bool
-     * @throws \dml_exception
+     * @throws dml_exception
      */
     public static function user_can_access_cmid(int $cmid = 0, int $userid) : bool {
         global $DB;
@@ -148,7 +151,7 @@ class helper {
             'status' => 1,
         ], 'id', IGNORE_MULTIPLE);
 
-        return ($row) ? true : false;
+        return (bool)$row;
     }
 
     /**
@@ -158,7 +161,7 @@ class helper {
      * @param int $courseid
      *
      * @return stdClass
-     * @throws \dml_exception
+     * @throws dml_exception
      */
     public static function pricing_from_section(int $sectionnumber = 0, int $courseid = 0) : stdClass {
 
@@ -195,7 +198,7 @@ class helper {
      * @param int $userid
      *
      * @return bool
-     * @throws \dml_exception
+     * @throws dml_exception
      */
     public static function user_can_access_section(int $sectionnumber, int $courseid = 0, int $userid) : bool {
         global $DB;
