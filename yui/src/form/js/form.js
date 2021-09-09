@@ -18,7 +18,7 @@ M.availability_coursepayment.form = Y.Object(M.core_availability.plugin);
  */
 M.availability_coursepayment.form.initInner = function(params) {
     // eslint-disable-next-line no-console
-    console.log('M.availability_coursepayment' , params);
+    console.log('M.availability_coursepayment', params);
 };
 
 M.availability_coursepayment.form.getNode = function(json) {
@@ -55,7 +55,7 @@ M.availability_coursepayment.form.getNode = function(json) {
         html += '   <option ' + selected + 'value="' + i + '">' + i + '</option>';
     }
 
-    html +=     '</select>' +
+    html += '</select>' +
         '   </div>' +
         '</div>';
 
@@ -80,30 +80,29 @@ M.availability_coursepayment.form.getNode = function(json) {
     // like, but this pattern is used by the existing code.
     if (!M.availability_coursepayment.form.addedEvents) {
         M.availability_coursepayment.form.addedEvents = true;
-        try {
-            var root = Y.one('#fitem_id_availabilityconditionsjson');
-            if (!root) {
-                // eslint-disable-next-line no-console
-                console.log('Moodle 3.5 or higher ?');
-                root = Y.one('#id_availabilityconditionsjson');
-            }
 
-            Y.one('#page').delegate('change', function() {
-                // eslint-disable-next-line no-console
-                console.log('Change detected');
-                // The key point is this update call. This call will update
-                // the JSON data in the hidden field in the form, so that it
-                // includes the new value of the checkbox.
-                M.core_availability.form.update();
-            }, '.availability_coursepayment > input, .availability_coursepayment > select');
-        } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log('M.availability_coursepayment.form.addedEvents');
 
-            try {
-                M.core_availability.form.update();
-            } catch (e) {
+        var root = Y.one('.availability-field');
+        root.delegate('keyup', function() {
+            // eslint-disable-next-line no-console
+            console.log('Change detected');
+            // The key point is this update call. This call will update
+            // the JSON data in the hidden field in the form, so that it
+            // includes the new value of the checkbox.
+            M.core_availability.form.update();
+        }, '.availability_coursepayment input');
 
-            }
-        }
+        root.delegate('change', function() {
+            // eslint-disable-next-line no-console
+            console.log('Change detected');
+            // The key point is this update call. This call will update
+            // the JSON data in the hidden field in the form, so that it
+            // includes the new value of the checkbox.
+            M.core_availability.form.update();
+        }, '.availability_coursepayment select');
+
     }
 
     return node;
@@ -128,10 +127,10 @@ M.availability_coursepayment.form.fillValue = function(value, node) {
  * @method getValue
  * @return {Number|String} Value of field as number or string if not valid
  */
-M.availability_coursepayment.form.getValue = function(field, node) {
+M.availability_coursepayment.form.getValue = function(field, nodeoriginal) {
     var value;
     // Get field value.
-    var node = node.one('[name=' + field + ']');
+    var node = nodeoriginal.one('[name=' + field + ']');
     if (node) {
         value = node.get('value');
         // Make , = .
