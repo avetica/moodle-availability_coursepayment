@@ -31,5 +31,5 @@ $plugin->component = 'availability_coursepayment';
 $plugin->maturity = MATURITY_STABLE;
 $plugin->release = '4.1.0';
 $plugin->dependencies = [
-    'enrol_coursepayment' => 2022120200,
+    'enrol_coursepayment' => 2022120100,
 ];
