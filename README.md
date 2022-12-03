@@ -16,7 +16,10 @@ Author
 ![Moodle39](https://img.shields.io/badge/moodle-3.9-brightgreen.svg)
 ![Moodle310](https://img.shields.io/badge/moodle-3.10-brightgreen.svg)
 ![Moodle311](https://img.shields.io/badge/moodle-3.11-brightgreen.svg)
+![Moodle40](https://img.shields.io/badge/moodle-4.0-brightgreen.svg)
+![Moodle41](https://img.shields.io/badge/moodle-4.1-brightgreen.svg)
 ![PHP7.2](https://img.shields.io/badge/PHP-7.2-brightgreen.svg)
+![PHP7.4](https://img.shields.io/badge/PHP-7.4-brightgreen.svg)
 
 Description
 ====================
@@ -42,6 +45,7 @@ Changelog
 
 See version control for the complete history. Major changes in this version will be listed below.
 
+- 2022120100 - Moodle 4.1 / Moodle Workplace 4.0 and PHP 7.4 support implemented.
 - 2021042101 - Moodle 3.11 support implemented.
 - 2020012800 - Moodle 3.9 support implemented, only supports PHP 7.2 and higher.
 - 2020010200 - Moodle 3.8 support implemented.
