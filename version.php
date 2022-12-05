@@ -25,11 +25,11 @@
  **/
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2022120100;
-$plugin->requires = 2014050800;
 $plugin->component = 'availability_coursepayment';
+$plugin->version = 2022120200;
+$plugin->requires = 2014050800;
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '4.1.0';
+$plugin->release = '4.0.5';
 $plugin->dependencies = [
-    'enrol_coursepayment' => 2022120100,
+    'enrol_coursepayment' => 2022120200,
 ];
