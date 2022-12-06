@@ -33,6 +33,7 @@ Activity based restriction. Users have to pay first before they can enter an act
 ![Moodle310](https://img.shields.io/badge/moodle-3.10-brightgreen.svg)
 ![Moodle311](https://img.shields.io/badge/moodle-3.11-brightgreen.svg)
 ![Moodle4005](https://img.shields.io/badge/moodle-4.0.5-brightgreen.svg)
+![Moodle41](https://img.shields.io/badge/moodle-4.1-brightgreen.svg)
 ![PHP7.2](https://img.shields.io/badge/PHP-7.2-brightgreen.svg)
 ![PHP7.4](https://img.shields.io/badge/PHP-7.4-brightgreen.svg)
 
@@ -42,6 +43,7 @@ Activity based restriction. Users have to pay first before they can enter an act
 
 See version control for the complete history. Major changes in this version will be listed below.
 
+- 2022120300 - Moodle 4.1 support implemented.
 - 2022120200 - Moodle workplace 4.0.5 support implemented.
 - 2021042101 - Moodle 3.11 support implemented.
 - 2020012800 - Moodle 3.9 support implemented, only supports PHP 7.2 and higher.
