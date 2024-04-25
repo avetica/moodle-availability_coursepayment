@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'availability_coursepayment';
-$plugin->version = 2022120300;
+$plugin->version = 2024042500;
 $plugin->requires = 2014050800;
 $plugin->maturity = MATURITY_STABLE;
 $plugin->release = '4.1.0';

@@ -111,7 +111,7 @@ switch ($contextlevel) {
 
     case CONTEXT_COURSE:
         // Check if user already can access the content.
-        if (\availability_coursepayment\helper::user_can_access_section($section, $course->id)) {
+        if (\availability_coursepayment\helper::user_can_access_section($section, $course->id , $USER->id)) {
             redirect(new moodle_url('/course/view.php', ['id' => $course->id, 'status' => 'user_can_access_section']));
         }
 
